@@ -1,9 +1,10 @@
 #include <string>
 #include <iostream>
+#include <iomanip>
+#include <vector>
 char* CODES = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
-std::string base64_encode(char* in, int length) 
+std::string base64_encode(uint8_t* in, int length) 
 {
-
 		std::string out;
 		int b;
 		for (int i = 0; i < length; i += 3) {
@@ -31,8 +32,31 @@ std::string base64_encode(char* in, int length)
 		}
 		return out;
 }
+uint8_t* string_to_uint8(std::string input) {
+		uint8_t* output = (uint8_t*) malloc(sizeof(input.length() * sizeof(uint8_t)));
+		for (int i = 0; i < input.length(); i++)
+		{
+				output[i] = int(input[i]);
+		}
+		return output;
+}
+std::vector<uint8_t> fixed_xor(std::vector<uint8_t> input, std::vector<uint8_t> operand) {
+		std::vector<uint8_t> output;
+		for (int i=0; i<input.size(); i++)
+		{
+				output.push_back(input[i] ^ operand[i]);
+		}
+		return output;
+}
 int main() {
-		char* s = "Man is distinguished, not only by his reason, but by this singular passion from\nother animals, which is a lust of the mind, that by a perseverance of delight\nin the continued and indefatigable generation of knowledge, exceeds the short\nvehemence of any carnal pleasure.";
-		std::cout << base64_encode(s, strlen(s));
-		
+		//char* s = "Man is distinguished, not only by his reason, but by this singular passion from\nother animals, which is a lust of the mind, that by a perseverance of delight\nin the continued and indefatigable generation of knowledge, exceeds the short\nvehemence of any carnal pleasure.";
+		uint8_t data[] = { 0x49, 0x27, 0x6d, 0x20, 0x6b, 0x69, 0x6c, 0x6c, 0x69, 0x6e, 0x67, 0x20, 0x79, 0x6f, 0x75, 0x72, 0x20, 0x62, 0x72, 0x61, 0x69, 0x6e, 0x20, 0x6c, 0x69, 0x6b, 0x65, 0x20, 0x61, 0x20, 0x70, 0x6f, 0x69, 0x73, 0x6f, 0x6e, 0x6f, 0x75, 0x73, 0x20, 0x6d, 0x75, 0x73, 0x68, 0x72, 0x6f, 0x6f, 0x6d};
+		//std::cout << string_to_uint8("49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d"));
+		//std::cout << base64_encode(data, 48);
+		std::vector<uint8_t> xor = { 0x1c,0x01, 0x11, 0x00, 0x1f, 0x01, 0x01, 0x00, 0x06,0x1a,0x02,0x4b,0x53,0x53,0x50,0x09,0x18,0x1c };
+		std::vector<uint8_t> xor2 = { 0x68,0x69,0x74,0x20,0x74,0x68,0x65,0x20,0x62,0x75,0x6c,0x6c,0x27,0x73,0x20,0x65,0x79,0x65 };
+		std::vector<uint8_t> fx = fixed_xor(xor,xor2);
+		for (int i = 0; i < fx.size(); ++i) {
+				std::cout << std::hex << unsigned(fx[i]);
+		}
 }
