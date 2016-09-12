@@ -45,7 +45,8 @@ uint8_t* string_to_uint8(std::string input) {
 				if (temp.length() >= 2){
 						std::stringstream ss;
 						uint8_t target(0);
-
+						//http://www.cplusplus.com/forum/general/101698/ read string two at a time
+						//http://stackoverflow.com/questions/18346726/how-to-convert-hex-string-to-uint8/
 						ss << std::hex << temp;
 						if (ss >> target) {
 								//std::cout << "value=" << target << '\n';
@@ -60,7 +61,7 @@ uint8_t* string_to_uint8(std::string input) {
 				}
 		);
 		return output;
-}
+}//cooklies
 std::vector<uint8_t> fixed_xor(std::vector<uint8_t> input, std::vector<uint8_t> operand) {
 		std::vector<uint8_t> output;
 		for (int i=0; i<input.size(); i++)
@@ -78,11 +79,13 @@ int main() {
 		std::vector<uint8_t> xor2 = { 0x68,0x69,0x74,0x20,0x74,0x68,0x65,0x20,0x62,0x75,0x6c,0x6c,0x27,0x73,0x20,0x65,0x79,0x65 };
 		std::vector<uint8_t> fx = fixed_xor(xor,xor2);
 		std::vector<uint8_t> fa = { 0x1b,0x37,0x37,0x33,0x31,0x36,0x3f,0x78,0x15,0x1b,0x7f,0x2b,0x78,0x34,0x31,0x33,0x3d,0x78,0x39,0x78,0x28,0x37,0x2d,0x36,0x3c,0x78,0x37,0x3e,0x78,0x3a,0x39,0x3b,0x37,0x36 };
+		std::string s = { "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736" };
+		uint8_t* converted = string_to_uint8(s);
 		for_each(fa.begin(), fa.end(), [](auto x) {
 				//fixed_xor(x, 0x1);
 		});
 		
 		for (int i = 0; i < fx.size(); ++i) {
-				std::cout << std::hex << unsigned(fx[i]);
+				//std::cout << std::hex << unsigned(fx[i]);
 		}
 }
